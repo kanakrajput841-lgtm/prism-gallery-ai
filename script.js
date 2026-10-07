@@ -1,4 +1,6 @@
-﻿const seed=[
+window.addEventListener("error",event=>{window.prismStartupError=event.message||"Gallery startup error"});
+
+const seed=[
  {id:1,name:"Mountains",cat:"Camera",date:"16 Sep 2026",tags:["Mountain","Nature"],src:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=85"},
  {id:2,name:"Forest Light",cat:"Camera",date:"14 Sep 2026",tags:["Forest","Nature"],src:"https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=900&q=85"},
  {id:3,name:"City Night",cat:"Downloads",date:"12 Sep 2026",tags:["City","Night"],src:"https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=900&q=85"},
@@ -67,3 +69,21 @@ function loadImage(src){return new Promise((resolve,reject)=>{let img=new Image(
 $("saveEdit").onclick=async()=>{let button=$("saveEdit");button.disabled=true;try{let img=await loadImage(current.src),c=document.createElement("canvas"),ctx=c.getContext("2d",{willReadFrequently:true});c.width=img.naturalWidth;c.height=img.naturalHeight;ctx.filter=`brightness(${edit.brightness/100}) contrast(${edit.contrast/100}) saturate(${edit.saturation/100*(1+edit.vibrance/100)}) sepia(${Math.max(0,edit.warmth)/130}) hue-rotate(${Math.min(0,edit.warmth)*.35}deg) blur(${edit.blur}px)`;ctx.drawImage(img,0,0);ctx.filter="none";let pixels=ctx.getImageData(0,0,c.width,c.height),d=pixels.data;for(let i=0;i<d.length;i+=4){for(let ch=0;ch<3;ch++){let x=d[i+ch]/255,shadow=edit.shadows/100*Math.pow(1-x,2),highlight=edit.highlights/100*Math.pow(x,2);d[i+ch]=clamp(Math.round((x+shadow+highlight)*255+(ch===0?edit.warmth:ch===2?-edit.warmth:0)*.55),0,255)}}ctx.putImageData(pixels,0,0);if(edit.sharpen>0){let original=ctx.getImageData(0,0,c.width,c.height),src=original.data,out=ctx.createImageData(c.width,c.height);out.data.set(src);let strength=edit.sharpen*.22;for(let y=1;y<c.height-1;y++)for(let x=1;x<c.width-1;x++){let i=(y*c.width+x)*4;for(let ch=0;ch<3;ch++){let blur=(src[i-4+ch]+src[i+4+ch]+src[i-c.width*4+ch]+src[i+c.width*4+ch])/4;out.data[i+ch]=clamp(src[i+ch]+(src[i+ch]-blur)*strength,0,255)}}ctx.putImageData(out,0,0)}let data=c.toDataURL("image/jpeg",.92),a=document.createElement("a");a.href=data;a.download=current.name+"-edited.jpg";a.click();current.src=data;save();updateViewer();render();$("editImg").src=data;$("editor").classList.remove("show")}catch(err){alert("This image could not be exported. Try an uploaded photo or a different image source.");console.error(err)}finally{button.disabled=false}};
 function guessTags(n){let s=n.toLowerCase(),t=[];for(let [k,v] of [["mountain","Mountain"],["forest","Forest"],["beach","Ocean"],["sea","Ocean"],["screen","Screenshot"],["screenshot","Screenshot"],["city","City"],["sun","Sunset"],["portrait","Portrait"]])if(s.includes(k))t.push(v);return t.length?t:["Photo","Imported"]}
 render();window.prismGalleryReady=true;scanVisualDuplicates();
+
+
+if(!window.prismGalleryReady){
+  const gallery=document.getElementById("gallery"),input=document.getElementById("fileInput"),upload=document.getElementById("uploadBtn");
+  const fallbackSeeds=[
+    {id:"fallback-1",name:"Mountains",cat:"Camera",tags:["Mountain","Nature"],src:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=85"},
+    {id:"fallback-2",name:"Forest Light",cat:"Camera",tags:["Forest","Nature"],src:"https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=900&q=85"},
+    {id:"fallback-3",name:"Ocean",cat:"Camera",tags:["Ocean","Travel"],src:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=85"}
+  ];
+  let fallbackPhotos=[];try{const stored=JSON.parse(localStorage.getItem("prismPhotos")||"[]");if(Array.isArray(stored))fallbackPhotos=stored.filter(p=>p&&p.src)}catch(_){}
+  for(const sample of fallbackSeeds)if(!fallbackPhotos.some(p=>p.id===sample.id||p.name===sample.name))fallbackPhotos.unshift(sample);
+  function showFallback(){gallery.innerHTML=fallbackPhotos.map(p=>{const card=document.createElement("article");card.className="card";const img=document.createElement("img");img.src=p.src;img.alt=p.name||"Photo";img.onerror=()=>img.style.display="none";const name=document.createElement("div");name.className="overlay";name.textContent=p.name||"Photo";card.append(img,name);return card}).reduce((html,card)=>html+card.outerHTML,"");}
+  showFallback();
+  if(fallbackPhotos[0]){const wall=document.getElementById("wallImg");wall.src=fallbackPhotos[0].src;document.getElementById("wallName").textContent=fallbackPhotos[0].name||"Memory"}
+  upload.onclick=()=>input.click();
+  input.onchange=event=>{[...event.target.files].forEach(file=>{const reader=new FileReader();reader.onload=()=>{fallbackPhotos.unshift({id:Date.now()+Math.random(),name:file.name.replace(/\.[^.]+$/,""),cat:"Camera",tags:["Imported"],src:reader.result});showFallback();try{localStorage.setItem("prismPhotos",JSON.stringify(fallbackPhotos))}catch(_){}};reader.readAsDataURL(file)});input.value=""};
+  if(window.prismStartupError)console.error("Gallery recovery mode:",window.prismStartupError);
+}

@@ -36,11 +36,11 @@
 
 <div id="modal" class="modal">
 <button class="close" id="closeViewer">Ã—</button>
-<div class="viewer glass"><div class="viewer-img"><img id="viewImg"></div><aside class="side"><h2 id="viewName"></h2><div class="muted" id="viewDate"></div><div class="actions"><button class="btn" id="favBtn">â™¡ Favorite</button><button class="btn" id="lockBtn">Lock photo</button><button class="btn" id="editBtn">âœ¨ Edit</button><button class="btn" id="downloadBtn">â†“ Download</button><button class="btn" id="trashBtn">ðŸ—‘ Trash</button></div><div class="info" id="viewInfo"></div><h3>Presets</h3><div class="presetrow"><button class="btn" data-preset="Original">Original</button><button class="btn" data-preset="Vintage">Vintage</button><button class="btn" data-preset="Cinema">Cinema</button><button class="btn" data-preset="Golden">Golden</button><button class="btn" data-preset="Rose">Rose</button><button class="btn" data-preset="Cool">Cool</button><button class="btn" data-preset="Vivid">Vivid</button><button class="btn" data-preset="B&W">B&W</button></div><div class="timeline">Keyboard: Esc close Â· â† previous Â· â†’ next Â· mouse wheel zoom</div></aside></div>
+<div class="viewer glass"><div class="viewer-img"><img id="viewImg"></div><aside class="side"><h2 id="viewName"></h2><div class="muted" id="viewDate"></div><div class="actions"><button class="btn" id="favBtn"> Favorite</button><button class="btn" id="lockBtn">Lock photo</button><button class="btn" id="editBtn"> Edit</button><button class="btn" id="downloadBtn"> Download</button><button class="btn" id="trashBtn">Trash</button></div><div class="info" id="viewInfo"></div><h3>Presets</h3><div class="presetrow"><button class="btn" data-preset="Original">Original</button><button class="btn" data-preset="Vintage">Vintage</button><button class="btn" data-preset="Cinema">Cinema</button><button class="btn" data-preset="Golden">Golden</button><button class="btn" data-preset="Rose">Rose</button><button class="btn" data-preset="Cool">Cool</button><button class="btn" data-preset="Vivid">Vivid</button><button class="btn" data-preset="B&W">B&W</button></div><div class="timeline">Keyboard: Esc close. previous ·  next · mouse wheel zoom</div></aside></div>
 </div>
 
 <div id="editor" class="editor">
-<div class="editorbox glass"><div class="editcanvas"><img id="editImg"></div><aside class="controls"><button class="btn" id="editorClose">Ã— Close</button><h2>AI Photo Editor</h2><button class="btn primary" id="autoBtn">ðŸ¤– AI Auto Enhance</button>
+<div class="editorbox glass"><div class="editcanvas"><img id="editImg"></div><aside class="controls"><button class="btn" id="editorClose">Close</button><h2>AI Photo Editor</h2><button class="btn primary" id="autoBtn">AI Auto Enhance</button>
 <label>Brightness <output id="brightnessVal">100%</output></label><input id="brightness" type="range" min="50" max="160" value="100">
 <label>Contrast <output id="contrastVal">100%</output></label><input id="contrast" type="range" min="50" max="180" value="100">
 <label>Saturation <output id="saturationVal">100%</output></label><input id="saturation" type="range" min="0" max="180" value="100">
@@ -53,25 +53,6 @@
 <div class="actions"><button class="btn" id="resetEdit">Reset edits</button><button class="btn primary" id="saveEdit">Save edited photo</button></div></aside></div>
 </div>
 
-<script>window.addEventListener("error",event=>{window.prismStartupError=event.message||"Gallery startup error"});</script>
 <script src="script.js?v=7"></script>
-<script>
-if(!window.prismGalleryReady){
-  const gallery=document.getElementById("gallery"),input=document.getElementById("fileInput"),upload=document.getElementById("uploadBtn");
-  const fallbackSeeds=[
-    {id:"fallback-1",name:"Mountains",cat:"Camera",tags:["Mountain","Nature"],src:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=85"},
-    {id:"fallback-2",name:"Forest Light",cat:"Camera",tags:["Forest","Nature"],src:"https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=900&q=85"},
-    {id:"fallback-3",name:"Ocean",cat:"Camera",tags:["Ocean","Travel"],src:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=85"}
-  ];
-  let fallbackPhotos=[];try{const stored=JSON.parse(localStorage.getItem("prismPhotos")||"[]");if(Array.isArray(stored))fallbackPhotos=stored.filter(p=>p&&p.src)}catch(_){}
-  for(const sample of fallbackSeeds)if(!fallbackPhotos.some(p=>p.id===sample.id||p.name===sample.name))fallbackPhotos.unshift(sample);
-  function showFallback(){gallery.innerHTML=fallbackPhotos.map(p=>{const card=document.createElement("article");card.className="card";const img=document.createElement("img");img.src=p.src;img.alt=p.name||"Photo";img.onerror=()=>img.style.display="none";const name=document.createElement("div");name.className="overlay";name.textContent=p.name||"Photo";card.append(img,name);return card}).reduce((html,card)=>html+card.outerHTML,"");}
-  showFallback();
-  if(fallbackPhotos[0]){const wall=document.getElementById("wallImg");wall.src=fallbackPhotos[0].src;document.getElementById("wallName").textContent=fallbackPhotos[0].name||"Memory"}
-  upload.onclick=()=>input.click();
-  input.onchange=event=>{[...event.target.files].forEach(file=>{const reader=new FileReader();reader.onload=()=>{fallbackPhotos.unshift({id:Date.now()+Math.random(),name:file.name.replace(/\.[^.]+$/,""),cat:"Camera",tags:["Imported"],src:reader.result});showFallback();try{localStorage.setItem("prismPhotos",JSON.stringify(fallbackPhotos))}catch(_){}};reader.readAsDataURL(file)});input.value=""};
-  if(window.prismStartupError)console.error("Gallery recovery mode:",window.prismStartupError);
-}
-</script>
 </body>
 </html>
