@@ -58,6 +58,6 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(200, {'Content-Type':mime[path.extname(file)] || 'application/octet-stream'});
     if (req.method === 'HEAD') return res.end();
     res.end(await readFile(file));
-  } catch (error) { if (!res.headersSent) sendJson(res, 500, { error:error.message || 'Server error.' }); else res.end(); }
+  } catch (error) { if (!res.headersSent) sendJson(res, error.code === 'ENOENT' ? 404 : 500, { error:error.code === 'ENOENT' ? 'Not found.' : error.message || 'Server error.' }); else res.end(); }
 });
 server.listen(port, () => console.log(`Prism Gallery AI running at http://localhost:${port}`));
