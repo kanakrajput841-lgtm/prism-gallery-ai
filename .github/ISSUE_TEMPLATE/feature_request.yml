@@ -1,0 +1,17 @@
+name: Feature request
+description: Suggest an improvement for Prism Gallery AI
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What would you like to improve?
+      description: Describe the need or problem this feature would address.
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: What do you have in mind?
+    validations:
+      required: false

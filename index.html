@@ -10,7 +10,7 @@
 <div class="app">
 <header class="glass">
   <div class="logo"></div><div class="brand">Prism <span>Gallery AI</span></div>
-  <div class="spacer"></div><input id="search" class="search" placeholder="Search photos, tags, dates..."><button class="btn primary" id="uploadBtn">+ Add photos</button>
+  <div class="spacer"></div><input id="search" class="search" placeholder="Search photos · Enter adds gallery results"><button class="btn" id="googleImagesBtn" type="button">Google Images</button><button class="btn primary" id="uploadBtn">+ Add photos</button>
   <input id="fileInput" type="file" accept="image/*" multiple hidden>
 </header>
 <section class="hero">
@@ -21,7 +21,13 @@
 <div class="toolbar" id="chips">
   <button class="btn chip active" data-cat="All">All</button><button class="btn chip" data-cat="Camera">Camera</button><button class="btn chip" data-cat="Favourites">Favourites</button><button class="btn chip" data-cat="Downloads">Downloads</button><button class="btn chip" data-cat="Screenshots">Screenshots</button><button class="btn chip" data-cat="Locked">Locked</button><button class="btn chip" data-cat="Trash">Trash</button>
 </div>
-<div class="feature-links"><a class="btn" href="#memoryWall">Memory Wall</a><button class="btn" id="scanDuplicatesTop">Find duplicates</button></div>
+<div class="feature-links"><a class="btn" href="#memoryWall">Memory Wall</a><button class="btn" id="scanDuplicatesTop">Find duplicates</button><button class="btn" id="createAlbum">+ New album</button><span id="storageStatus" class="storage-status" aria-live="polite"></span></div>
+<div id="albumBar" class="album-bar" aria-label="Photo albums"></div>
+<section id="imageSearch" class="image-search" aria-label="Image search results">
+  <div class="wall-heading"><div><div class="eyebrow">Image search results</div><h2>Web images</h2><p class="duplicate-intro">Search with the bar above, then add any picture you want to your gallery.</p></div></div>
+  <div id="imageSearchStatus" class="wall-status" aria-live="polite"></div>
+  <div id="imageSearchResults" class="image-search-results"></div>
+</section>
 <div id="gallery" class="gallery"></div>
 <section class="memory-wall" id="memoryWall" aria-label="Memory Wall">
   <div class="wall-heading"><div><div class="eyebrow">Your moments, on repeat</div><h2>Memory Wall</h2><div class="wall-status" id="wallStatus">Slideshow starts automatically</div></div><div class="wall-controls"><button class="btn" id="wallPrev">Previous</button><button class="btn" id="wallPlay">Pause</button><button class="btn" id="wallNext">Next</button></div></div>
@@ -36,7 +42,7 @@
 
 <div id="modal" class="modal">
 <button class="close" id="closeViewer">Ã—</button>
-<div class="viewer glass"><div class="viewer-img"><img id="viewImg"></div><aside class="side"><h2 id="viewName"></h2><div class="muted" id="viewDate"></div><div class="actions"><button class="btn" id="favBtn"> Favorite</button><button class="btn" id="lockBtn">Lock photo</button><button class="btn" id="editBtn"> Edit</button><button class="btn" id="downloadBtn"> Download</button><button class="btn" id="trashBtn">Trash</button></div><div class="info" id="viewInfo"></div><h3>Presets</h3><div class="presetrow"><button class="btn" data-preset="Original">Original</button><button class="btn" data-preset="Vintage">Vintage</button><button class="btn" data-preset="Cinema">Cinema</button><button class="btn" data-preset="Golden">Golden</button><button class="btn" data-preset="Rose">Rose</button><button class="btn" data-preset="Cool">Cool</button><button class="btn" data-preset="Vivid">Vivid</button><button class="btn" data-preset="B&W">B&W</button></div><div class="timeline">Keyboard: Esc close. previous ·  next · mouse wheel zoom</div></aside></div>
+<div class="viewer glass"><div class="viewer-img"><img id="viewImg"></div><aside class="side"><h2 id="viewName"></h2><div class="muted" id="viewDate"></div><div class="actions"><button class="btn" id="favBtn"> Favorite</button><button class="btn" id="lockBtn">Lock photo</button><button class="btn" id="editBtn"> Edit</button><button class="btn" id="downloadBtn"> Download</button><button class="btn" id="trashBtn">Trash</button><button class="btn" id="describeBtn">AI description</button></div><label class="album-picker">Album <select id="albumSelect"><option value="">No album</option></select></label><div class="info" id="viewInfo"></div><div id="sourceInfo" class="source-info"></div><h3>Presets</h3><div class="presetrow"><button class="btn" data-preset="Original">Original</button><button class="btn" data-preset="Vintage">Vintage</button><button class="btn" data-preset="Cinema">Cinema</button><button class="btn" data-preset="Golden">Golden</button><button class="btn" data-preset="Rose">Rose</button><button class="btn" data-preset="Cool">Cool</button><button class="btn" data-preset="Vivid">Vivid</button><button class="btn" data-preset="B&W">B&W</button></div><div class="timeline">Keyboard: Esc close. previous ·  next · mouse wheel zoom</div></aside></div>
 </div>
 
 <div id="editor" class="editor">
@@ -53,6 +59,6 @@
 <div class="actions"><button class="btn" id="resetEdit">Reset edits</button><button class="btn primary" id="saveEdit">Save edited photo</button></div></aside></div>
 </div>
 
-<script src="script.js?v=7"></script>
+<script src="script.js?v=18"></script>
 </body>
 </html>
